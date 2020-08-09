@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/menuSearch"
+        android:icon="@drawable/ic_search"
+        android:iconTint="@color/colorWhite"
+        android:title="Search"
+        app:showAsAction="collapseActionView|always" />
+
+
+    <item
+        android:icon="@drawable/ic_more"
+        android:iconTint="@color/colorWhite"
+        android:title="More"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/menuSettings"
+                android:icon="@drawable/ic_settings"
+                android:title="Settings"
+                app:showAsAction="never" />
+            <item
+                android:icon="@drawable/ic_share"
+                android:title="Share"
+                android:id="@+id/menuShare"
+                app:showAsAction="never">
+                <menu>
+                    <item
+                        android:icon="@drawable/ic_bluetooth"
+                        android:title="Bluetooth"
+                        app:showAsAction="never" />
+                    <item
+                        android:icon="@drawable/ic_message"
+                        android:title="Message"
+                        app:showAsAction="never" />
+                </menu>
+            </item>
+            <item
+                android:id="@+id/menuRate"
+                android:icon="@drawable/ic_star"
+                android:title="Rate"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menuExit"
+                android:icon="@drawable/ic_exit"
+                android:title="Exit"
+                app:showAsAction="never" />
+        </menu>
+
+    </item>
+
+</menu>

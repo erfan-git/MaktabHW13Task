@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.SplashFragment">
+
+
+<io.supercharge.shimmerlayout.ShimmerLayout
+    android:id="@+id/shimmerSplash"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:shimmer_animation_duration="2000"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    android:layout_marginTop="50dp"
+    app:shimmer_color="@color/colorWhite">
+
+    <ImageView
+        android:id="@+id/imageViewSplash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/image_splash"/>
+
+</io.supercharge.shimmerlayout.ShimmerLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/colorBlack"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@id/shimmerSplash"
+        android:id="@+id/textViewPercent"/>
+
+    <ProgressBar
+        android:id="@+id/progressBarSplash"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@id/textViewPercent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
