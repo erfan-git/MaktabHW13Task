@@ -8,52 +8,10 @@
     tools:context=".MainActivity">
 
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/appToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        app:menu="@menu/app_menu" />
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:tabSelectedTextColor="@color/colorWhite"
-        app:tabTextColor="@color/colorWhite"
-        app:tabIconTint="@color/colorWhite"
-        app:tabIndicatorColor="@color/colorYellow"
-        app:tabPaddingTop="10dp"
-
-        app:tabMode="fixed">
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/todo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_todo"
-            android:text="@string/todo" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/doing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_doing"
-            android:text="@string/doing" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_done"
-            android:text="@string/done" />
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager2.widget.ViewPager2
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/viewPager"/>
+        android:id="@+id/fragmentContainer"/>
+
 
 </LinearLayout>
