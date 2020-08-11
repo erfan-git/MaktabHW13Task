@@ -1,5 +1,6 @@
 package com.example.maktabhw13task.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -9,13 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.maktabhw13task.R;
-import com.example.maktabhw13task.adapter.ViewPagerAdapter;
+import com.example.maktabhw13task.adapter.TaskViewPagerAdapter;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
@@ -36,7 +38,7 @@ public class TaskListFragment extends Fragment {
     private FloatingActionButton mFabNewTask;
     private TabLayout mTabLayout;
     private BadgeDrawable mBadgeDrawable;
-    ViewPagerAdapter mViewPagerAdapter;
+    TaskViewPagerAdapter mTaskViewPagerAdapter;
 
 
     @Override
@@ -49,7 +51,7 @@ public class TaskListFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_task_list, container, false);
 
         findViews(view);
-       setHasOptionsMenu(true);
+        setToolbar();
         setViewPager();
         setTabLayout();
 
@@ -61,6 +63,14 @@ public class TaskListFragment extends Fragment {
         mToolbar = view.findViewById(R.id.appToolbar);
         mViewPager2 = view.findViewById(R.id.viewPager);
         mFabNewTask = view.findViewById(R.id.fabNewTask);
+
+    }
+
+    private void setToolbar(){
+
+        setHasOptionsMenu(true);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+        mToolbar.setTitleTextColor(Color.WHITE);
     }
 
     private void setTabLayout(){
@@ -99,8 +109,8 @@ public class TaskListFragment extends Fragment {
     }
 
     private void setViewPager(){
-        mViewPagerAdapter = new ViewPagerAdapter(getActivity());
-        mViewPager2.setAdapter(mViewPagerAdapter);
+        mTaskViewPagerAdapter = new TaskViewPagerAdapter(getActivity());
+        mViewPager2.setAdapter(mTaskViewPagerAdapter);
 
         mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -124,13 +134,12 @@ public class TaskListFragment extends Fragment {
         switch(item.getItemId()){
             case R.id.menuExit:
                 getActivity().finish();
-                break;
+                return true;
             case R.id.menuShare:
                 item.getSubMenu().clearHeader();
-                break;
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }

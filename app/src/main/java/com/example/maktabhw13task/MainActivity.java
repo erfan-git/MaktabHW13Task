@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         if (getSupportFragmentManager().findFragmentById(R.id.fragmentContainer) == null)
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, SplashFragment.newInstance()).commit();
 
