@@ -76,7 +76,7 @@ public class SplashFragment extends Fragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,ViewPagerFragment.newInstance()).commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, SignInFragment.newInstance()).commit();
                 }
             }, 1000);
         }
