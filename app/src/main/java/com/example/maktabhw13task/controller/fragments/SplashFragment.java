@@ -1,4 +1,4 @@
-package com.example.maktabhw13task.fragments;
+package com.example.maktabhw13task.controller.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -59,7 +59,7 @@ public class SplashFragment extends Fragment {
                 @Override
                 public void run() {
                     mProgressBar.setProgress(mProgressBar.getProgress() + 1);
-                    mTextViewPercent.setText("Percent : " + mProgressBar.getProgress() + "%");
+                    mTextViewPercent.setText("Loading : " + mProgressBar.getProgress() + "%");
                     setProgressBar();
                 }
             }, 15);

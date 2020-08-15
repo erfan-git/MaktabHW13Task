@@ -2,15 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <item
-        android:id="@+id/menuSearch"
-        android:icon="@drawable/ic_search"
-        android:iconTint="@color/colorWhite"
-        android:title="Search"
-        app:showAsAction="collapseActionView|always" />
-
-
     <item
         android:icon="@drawable/ic_more"
         android:iconTint="@color/colorWhite"
@@ -46,7 +37,7 @@
             <item
                 android:id="@+id/menuExit"
                 android:icon="@drawable/ic_exit"
-                android:title="Exit"
+                android:title="Sign out"
                 app:showAsAction="never" />
         </menu>
 
