@@ -32,4 +32,7 @@ public class TaskViewPagerAdapter extends FragmentStateAdapter {
         return 3;
     }
 
+
+
+
 }

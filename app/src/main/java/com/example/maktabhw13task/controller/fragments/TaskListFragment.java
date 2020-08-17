@@ -1,6 +1,7 @@
 package com.example.maktabhw13task.controller.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,30 +24,26 @@ public class TaskListFragment extends Fragment {
 
     public static final String TAG = "tag";
     public static final String BUNDLE_TASK_STATE = "BundleTaskList";
+    private RecyclerView mRecyclerView;
+    private TaskRepository mTaskRepository;
+    private TaskRecyclerViewAdapter mAdapter;
+    private TaskState mTaskState;
 
-    public static TaskListFragment newInstance(TaskState taskState) {
+    public static TaskListFragment newInstance(TaskState state) {
 
         Bundle args = new Bundle();
-        args.putSerializable(BUNDLE_TASK_STATE, taskState);
+        args.putSerializable(BUNDLE_TASK_STATE, state);
         TaskListFragment fragment = new TaskListFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-
-    private RecyclerView mRecyclerView;
-    private List<TaskModel> mTaskList;
-    private TaskRepository mTaskRepository;
-    private TaskState mTaskState;
-    TaskRecyclerViewAdapter mAdapter;
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mTaskRepository = TaskRepository.getInstance();
         mTaskState = (TaskState) getArguments().getSerializable(BUNDLE_TASK_STATE);
+        Log.d(TAG, "TaskState onCreate : " + mTaskState);
+        mTaskRepository = TaskRepository.getInstance();
     }
 
     @Override
@@ -54,37 +51,51 @@ public class TaskListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
 
         findViews(view);
-        setAdapter();
+
+        Log.d(TAG, "TaskState onCreateView : " + mTaskState);
+
+        setAdapter(mTaskState);
 
         return view;
     }
 
 
-    private void findViews(View view){
+    private void findViews(View view) {
 
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    public void setAdapter(){
+    public void setAdapter(TaskState taskState) {
 
-        mTaskList = getTaskList(mTaskState);
+       /* if (mAdapter == null) {
+            mAdapter = new TaskRecyclerViewAdapter(getTaskList(taskState));
 
-        if (mAdapter != null)
+        } else {
             mAdapter.notifyDataSetChanged();
-        else
-            mAdapter = new TaskRecyclerViewAdapter(mTaskList);
 
+        }*/
+
+
+
+        Log.d(TAG, "TaskState setAdapter : " + taskState);
+        Log.d(TAG, "in adapter");
+
+        mAdapter = new TaskRecyclerViewAdapter(getTaskList(taskState));
         mRecyclerView.setAdapter(mAdapter);
+
     }
 
-    private List<TaskModel> getTaskList(TaskState taskState){
+
+    private List<TaskModel> getTaskList(TaskState taskState) {
         List<TaskModel> list = new ArrayList<>();
 
+        Log.d(TAG, "mTaskRepository.getTaskList().size() : " + mTaskRepository.getTaskList().size());
         for (int i = 0; i < mTaskRepository.getTaskList().size(); i++) {
             if (mTaskRepository.getTaskList().get(i).getTaskState().equals(taskState))
                 list.add(mTaskRepository.getTaskList().get(i));
         }
+        Log.d(TAG, "target list : " + list.size());
         return list;
     }
 
