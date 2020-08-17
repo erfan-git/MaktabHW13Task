@@ -30,9 +30,10 @@
                 </menu>
             </item>
             <item
-                android:id="@+id/menuRate"
-                android:icon="@drawable/ic_star"
-                android:title="Rate"
+                android:id="@+id/menuDelete"
+                android:icon="@drawable/ic_delete"
+                android:title="Delete All"
+                app:actionViewClass="android.widget.Button"
                 app:showAsAction="never" />
             <item
                 android:id="@+id/menuExit"

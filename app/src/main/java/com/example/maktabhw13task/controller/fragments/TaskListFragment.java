@@ -11,6 +11,7 @@ import com.example.maktabhw13task.adapter.TaskRecyclerViewAdapter;
 import com.example.maktabhw13task.enums.TaskState;
 import com.example.maktabhw13task.model.TaskModel;
 import com.example.maktabhw13task.repository.TaskRepository;
+import com.example.maktabhw13task.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class TaskListFragment extends Fragment {
     public static final String BUNDLE_TASK_STATE = "BundleTaskList";
     private RecyclerView mRecyclerView;
     private TaskRepository mTaskRepository;
+    private UserRepository mUserRepository;
     private TaskRecyclerViewAdapter mAdapter;
     private TaskState mTaskState;
 
@@ -41,9 +43,10 @@ public class TaskListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mTaskState = (TaskState) getArguments().getSerializable(BUNDLE_TASK_STATE);
-        Log.d(TAG, "TaskState onCreate : " + mTaskState);
         mTaskRepository = TaskRepository.getInstance();
+        mUserRepository = UserRepository.getInstance();
     }
 
     @Override
@@ -51,8 +54,6 @@ public class TaskListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
 
         findViews(view);
-
-        Log.d(TAG, "TaskState onCreateView : " + mTaskState);
 
         setAdapter(mTaskState);
 
@@ -75,27 +76,19 @@ public class TaskListFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
 
         }*/
-
-
-
-        Log.d(TAG, "TaskState setAdapter : " + taskState);
-        Log.d(TAG, "in adapter");
-
-        mAdapter = new TaskRecyclerViewAdapter(getTaskList(taskState));
+        mAdapter = new TaskRecyclerViewAdapter(getTaskList(taskState), getActivity(), mUserRepository.getCurrentUserIndex());
         mRecyclerView.setAdapter(mAdapter);
-
     }
-
 
     private List<TaskModel> getTaskList(TaskState taskState) {
         List<TaskModel> list = new ArrayList<>();
 
-        Log.d(TAG, "mTaskRepository.getTaskList().size() : " + mTaskRepository.getTaskList().size());
         for (int i = 0; i < mTaskRepository.getTaskList().size(); i++) {
-            if (mTaskRepository.getTaskList().get(i).getTaskState().equals(taskState))
+            if (mUserRepository.getCurrentUserIndex() != 0 && mTaskRepository.getTaskList().get(i).getTaskState().equals(taskState) && mTaskRepository.getTaskList().get(i).getUserId().equals(mUserRepository.getUserList().get(mUserRepository.getCurrentUserIndex()).getId()))
+                list.add(mTaskRepository.getTaskList().get(i));
+            else if (mUserRepository.getCurrentUserIndex() == 0 && mTaskRepository.getTaskList().get(i).getTaskState().equals(taskState))
                 list.add(mTaskRepository.getTaskList().get(i));
         }
-        Log.d(TAG, "target list : " + list.size());
         return list;
     }
 
