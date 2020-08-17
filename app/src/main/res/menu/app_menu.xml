@@ -14,27 +14,25 @@
                 android:title="Settings"
                 app:showAsAction="never" />
             <item
-                android:icon="@drawable/ic_share"
-                android:title="Share"
-                android:id="@+id/menuShare"
+                android:icon="@drawable/ic_encryption"
+                android:title="Admin"
+                android:id="@+id/menuAdmin"
+                app:actionViewClass="android.widget.Button"
                 app:showAsAction="never">
                 <menu>
                     <item
-                        android:icon="@drawable/ic_bluetooth"
-                        android:title="Bluetooth"
-                        app:showAsAction="never" />
+                        android:id="@+id/menuDelete"
+                        android:icon="@drawable/ic_delete"
+                        android:title="Delete All"
+                        app:showAsAction="never"/>
                     <item
-                        android:icon="@drawable/ic_message"
-                        android:title="Message"
-                        app:showAsAction="never" />
+                        android:id="@+id/menuManageUser"
+                        android:icon="@drawable/ic_user"
+                        android:title="Manage Users"
+                        app:showAsAction="never"/>
                 </menu>
             </item>
-            <item
-                android:id="@+id/menuDelete"
-                android:icon="@drawable/ic_delete"
-                android:title="Delete All"
-                app:actionViewClass="android.widget.Button"
-                app:showAsAction="never" />
+
             <item
                 android:id="@+id/menuExit"
                 android:icon="@drawable/ic_exit"
