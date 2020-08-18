@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="16dp"
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="#F3EEEE"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textViewUserItemFirstLetter"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/background_circle_first_letter"
+            android:textSize="24sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        <TextView
+            android:id="@+id/textViewUserItemTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@id/textViewUserItemFirstLetter"
+            app:layout_constraintTop_toTopOf="@id/textViewUserItemFirstLetter"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/textViewTaskNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@id/textViewUserItemTitle"
+            app:layout_constraintTop_toTopOf="@id/textViewUserItemFirstLetter"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"/>
+
+        <TextView
+            android:id="@+id/textViewUserItemSubtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Subtitle"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/textViewUserItemFirstLetter"
+            app:layout_constraintTop_toBottomOf="@id/textViewUserItemTitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="8dp"/>
+
+        <ImageView
+            android:id="@+id/imageViewDeleteUser"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/ic_delete"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.cardview.widget.CardView>

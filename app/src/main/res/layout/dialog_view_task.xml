@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputTextLayoutDialogTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxBackgroundColor="@color/colorWhite"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            android:clickable="false"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxStrokeColor="@color/colorPurple"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextDialogTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title"
+                android:editable="false"
+                android:textIsSelectable="true"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputTextLayoutDialogDescription"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            app:boxBackgroundColor="@color/colorWhite"
+            app:boxBackgroundMode="outline"
+            android:clickable="false"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxStrokeColor="@color/colorPurple"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/inputTextLayoutDialogTitle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextDialogDescription"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|top"
+                android:editable="false"
+                android:textIsSelectable="true"
+                android:lineSpacingExtra="10dp"
+                android:nestedScrollingEnabled="true"
+                android:hint="Description" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/buttonDialogDatePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Date Piker"
+            android:clickable="false"
+            app:layout_constraintEnd_toStartOf="@+id/buttonDialogTimePicker"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginEnd="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/inputTextLayoutDialogDescription" />
+
+        <Button
+            android:id="@+id/buttonDialogTimePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Time Piker"
+            android:clickable="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginStart="4dp"
+            app:layout_constraintStart_toEndOf="@+id/buttonDialogDatePicker"
+            app:layout_constraintTop_toBottomOf="@id/inputTextLayoutDialogDescription" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
