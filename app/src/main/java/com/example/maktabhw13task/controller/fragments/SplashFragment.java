@@ -5,20 +5,15 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.maktabhw13task.R;
 
 import androidx.fragment.app.Fragment;
 
 public class SplashFragment extends Fragment {
 
-    private TextView mTextViewPercent;
-    private ProgressBar mProgressBar;
-    private ImageView mImageViewIcon;
+    private LottieAnimationView mLottieAnimationViewSplash;
 
     public static SplashFragment newInstance() {
 
@@ -39,47 +34,26 @@ public class SplashFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_splash, container, false);
 
         findViews(view);
-
-        setProgressBar();
-
-        setAnimation();
+        startApp();
 
         return view;
     }
 
     private void findViews(View view) {
-        mProgressBar = view.findViewById(R.id.progressBarSplash);
-        mTextViewPercent = view.findViewById(R.id.textViewPercent);
-        mImageViewIcon = view.findViewById(R.id.imageViewSplash);
+        mLottieAnimationViewSplash = view.findViewById(R.id.lottieSplash);
+        mLottieAnimationViewSplash.setSpeed(0.6f);
     }
 
-    private void setProgressBar() {
-        if (mProgressBar.getProgress() < 100) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mProgressBar.setProgress(mProgressBar.getProgress() + 1);
-                    mTextViewPercent.setText("Loading : " + mProgressBar.getProgress() + "%");
-                    setProgressBar();
-                }
-            }, 15);
-        }
-        startApp();
+    private void startApp() {
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, SignInFragment.newInstance()).commit();
+            }
+        }, 3000);
+
     }
 
-    private void setAnimation(){
-        mImageViewIcon.startAnimation(new AnimationUtils().loadAnimation(getActivity(),R.anim.move_down));
-    }
-
-    private void startApp(){
-        if (mProgressBar.getProgress() == 100){
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, SignInFragment.newInstance()).commit();
-                }
-            }, 1000);
-        }
-    }
 
 }

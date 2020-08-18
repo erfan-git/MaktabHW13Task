@@ -30,7 +30,6 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         mCurrentUser = currentUser;
     }
 
-
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -62,7 +61,6 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         });
     }
 
-
     @Override
     public int getItemCount() {
         return mTaskList.size();
@@ -81,6 +79,5 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
 
         }
     }
-
 
 }

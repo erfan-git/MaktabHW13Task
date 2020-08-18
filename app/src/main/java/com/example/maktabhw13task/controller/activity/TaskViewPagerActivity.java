@@ -37,23 +37,18 @@ public class TaskViewPagerActivity extends AppCompatActivity {
     public static final String TAG = "tag";
     public static final String TAG_DELETE_DIALOG = "DeleteTaskDialog";
     public static final String TAG_REMOVE_DIALOG = "RemoveUserDialog";
-    private int mCurrentTab;
 
     public static Intent newIntent(Context context){
         return new Intent(context, TaskViewPagerActivity.class);
     }
 
-    public static final int REQUEST_CODE_NEW_TASK = 0;
     public static final String TAG_NEW_TASK = "TagNewTask";
-
-
 
     public ViewPager2 mViewPager2;
     private Toolbar mToolbar;
     private FloatingActionButton mFabNewTask;
 
     private TabLayout mTabLayout;
-    private BadgeDrawable mBadgeDrawable;
     public TaskViewPagerAdapter mTaskViewPagerAdapter;
     private UserRepository mUserRepository;
     private TaskRepository mTaskRepository;
@@ -68,20 +63,12 @@ public class TaskViewPagerActivity extends AppCompatActivity {
         mTaskRepository = TaskRepository.getInstance();
 
         findViews();
-
         setListeners();
-
         setToolbar();
-
         setViewPager();
-
         setTabLayout();
-
         hideImage();
-
     }
-
-
 
     private void findViews(){
 
@@ -110,18 +97,11 @@ public class TaskViewPagerActivity extends AppCompatActivity {
                     case 1:{
                         tab.setText(R.string.doing);
                         tab.setIcon(R.drawable.ic_doing);
-                     /*   mBadgeDrawable = tab.getOrCreateBadge();
-                        mBadgeDrawable.setVisible(true);
-                        mBadgeDrawable.setMaxCharacterCount(3);
-                        mBadgeDrawable.setNumber(100);*/
                         break;
                     }
                     case 2:{
                         tab.setText(R.string.done);
                         tab.setIcon(R.drawable.ic_done);
-                     /*   mBadgeDrawable = tab.getOrCreateBadge();
-                        mBadgeDrawable.setVisible(true);
-                        mBadgeDrawable.setNumber(45);*/
                         break;
                     }
                     default:{
@@ -245,7 +225,6 @@ public class TaskViewPagerActivity extends AppCompatActivity {
 
         if (getTaskList(getCurrentTabState()).size() == 0) {
             mImageViewTaskEmpty.setVisibility(View.VISIBLE);
-            //mImageViewTaskEmpty.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
             mImageViewTaskEmpty.bringToFront();
         }
         else

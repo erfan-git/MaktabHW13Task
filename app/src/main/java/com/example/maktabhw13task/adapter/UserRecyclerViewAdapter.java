@@ -49,7 +49,6 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         holder.mTaskNumber.setText("(Tasks: " + getTaskNumbers(position) + ")");
     }
 
-
     private int getTaskNumbers(int position) {
         int counter = 0;
         for (int i = 0; i < mTaskList.size(); i++) {

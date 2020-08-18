@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.maktabhw13task.R;
 import com.example.maktabhw13task.controller.activity.TaskViewPagerActivity;
 import com.example.maktabhw13task.model.UserModel;
@@ -24,6 +25,7 @@ public class SignInFragment extends Fragment {
 
     private UserRepository mUserRepository;
     private Button mButtonSignIn, mButtonSignUp;
+    private LottieAnimationView mLottieAnimationView;
 
     private TextInputEditText mEditTextUsername, mEditTextPassword;
     private TextInputLayout mTextInputLayoutUsername, mTextInputLayoutPassword;
@@ -61,10 +63,10 @@ public class SignInFragment extends Fragment {
         mCheckBoxAdmin = view.findViewById(R.id.checkBoxAdmin);
         mTextInputLayoutUsername = view.findViewById(R.id.textInputLayoutUsername);
         mTextInputLayoutPassword = view.findViewById(R.id.textInputLayoutPassword);
+        mLottieAnimationView = view.findViewById(R.id.lottie_done);
 
         setCheckBoxAdmin();
     }
-
 
     private void setListeners(){
 
@@ -139,7 +141,7 @@ public class SignInFragment extends Fragment {
                     }else
                     {
                         mUserRepository.addUser(new UserModel(mEditTextUsername.getText().toString(),mEditTextPassword.getText().toString()));
-                        Snackbar.make(v, "Admin User '" + mEditTextUsername.getText().toString() + "' successfully created.", Snackbar.LENGTH_LONG).show();
+                        mLottieAnimationView.playAnimation();
                         setCheckBoxAdmin();
                     }
                     return;
@@ -147,12 +149,11 @@ public class SignInFragment extends Fragment {
 
                 mUserRepository.addUser(new UserModel(mEditTextUsername.getText().toString(),mEditTextPassword.getText().toString()));
                 setCheckBoxAdmin();
-                Snackbar.make(v, "User '" + mEditTextUsername.getText().toString() + "' successfully created.", Snackbar.LENGTH_LONG).show();
+                mLottieAnimationView.playAnimation();
             }
         });
 
     }
-
 
     private boolean textValidation() {
 
