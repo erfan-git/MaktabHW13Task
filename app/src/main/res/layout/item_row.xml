@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="16dp"
@@ -13,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/textViewUserItemFirstLetter"
+            android:id="@+id/textViewItemRowFirstLetter"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
@@ -29,51 +28,51 @@
 
 
         <TextView
-            android:id="@+id/textViewUserItemTitle"
+            android:id="@+id/textViewItemRowTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Title"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@id/textViewUserItemFirstLetter"
-            app:layout_constraintTop_toTopOf="@id/textViewUserItemFirstLetter"
+            app:layout_constraintStart_toEndOf="@id/textViewItemRowFirstLetter"
+            app:layout_constraintTop_toTopOf="@id/textViewItemRowFirstLetter"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             android:textColor="@color/colorBlack"
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/textViewTaskNumber"
+            android:id="@+id/textViewItemRowDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@id/textViewUserItemTitle"
-            app:layout_constraintTop_toTopOf="@id/textViewUserItemFirstLetter"
+            app:layout_constraintStart_toEndOf="@id/textViewItemRowTitle"
+            app:layout_constraintTop_toTopOf="@id/textViewItemRowFirstLetter"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"/>
 
         <TextView
-            android:id="@+id/textViewUserItemSubtitle"
+            android:id="@+id/textViewItemRowSubtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Subtitle"
             android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@id/textViewUserItemFirstLetter"
-            app:layout_constraintTop_toBottomOf="@id/textViewUserItemTitle"
+            app:layout_constraintStart_toEndOf="@id/textViewItemRowFirstLetter"
+            app:layout_constraintTop_toBottomOf="@id/textViewItemRowTitle"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="8dp"/>
 
         <ImageView
-            android:id="@+id/imageViewDeleteUser"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:id="@+id/imageViewDeleteItemRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_delete"
+            android:layout_marginEnd="8dp"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/ic_delete"/>
-
+            android:background="@drawable/delete_selected"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 </androidx.cardview.widget.CardView>

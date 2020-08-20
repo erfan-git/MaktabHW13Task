@@ -1,14 +1,11 @@
 package com.example.maktabhw13task.repository;
 
+import com.example.maktabhw13task.enums.TaskState;
 import com.example.maktabhw13task.model.TaskModel;
-import com.example.maktabhw13task.model.UserModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class TaskRepository {
 
@@ -25,6 +22,16 @@ public class TaskRepository {
     }
 
     private List<TaskModel> mTaskList;
+
+    private TaskState mCurrentTab = TaskState.TODO;
+
+    public TaskState getCurrentTab() {
+        return mCurrentTab;
+    }
+
+    public void setCurrentTab(TaskState currentTab) {
+        mCurrentTab = currentTab;
+    }
 
     public void addTask(TaskModel taskModel){
         mTaskList.add(taskModel);

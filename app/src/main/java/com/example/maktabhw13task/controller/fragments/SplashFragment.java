@@ -41,14 +41,29 @@ public class SplashFragment extends Fragment {
 
     private void findViews(View view) {
         mLottieAnimationViewSplash = view.findViewById(R.id.lottieSplash);
-        mLottieAnimationViewSplash.setSpeed(0.6f);
+
     }
 
     private void startApp() {
+        Handler handler = new Handler();
 
-        new Handler().postDelayed(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                mLottieAnimationViewSplash.setVisibility(View.VISIBLE);
+                mLottieAnimationViewSplash.playAnimation();
+                mLottieAnimationViewSplash.setSpeed(0.5f);
+            }
+        },1000);
+
+
+
+
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, SignInFragment.newInstance()).commit();
             }
         }, 3000);

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +25,6 @@ import com.example.maktabhw13task.enums.TaskState;
 import com.example.maktabhw13task.model.TaskModel;
 import com.example.maktabhw13task.repository.TaskRepository;
 import com.example.maktabhw13task.repository.UserRepository;
-import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -49,7 +49,7 @@ public class TaskViewPagerActivity extends AppCompatActivity {
     private FloatingActionButton mFabNewTask;
 
     private TabLayout mTabLayout;
-    public TaskViewPagerAdapter mTaskViewPagerAdapter;
+    private TaskViewPagerAdapter mTaskViewPagerAdapter;
     private UserRepository mUserRepository;
     private TaskRepository mTaskRepository;
     private ImageView mImageViewTaskEmpty;
@@ -118,16 +118,8 @@ public class TaskViewPagerActivity extends AppCompatActivity {
     public void setViewPager(){
 
         mTaskViewPagerAdapter = new TaskViewPagerAdapter(this);
+
         mViewPager2.setAdapter(mTaskViewPagerAdapter);
-
-
-
-
-
-       /* mBadgeDrawable = mTabLayout.getTabAt(position).getOrCreateBadge();
-        mBadgeDrawable.setVisible(false);*/
-
-        //mViewPager2.setCurrentItem(mViewPager2.getCurrentItem(), false);
     }
 
     private void setListeners(){
@@ -149,6 +141,7 @@ public class TaskViewPagerActivity extends AppCompatActivity {
         mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
+                getCurrentTab();
                 hideImage();
             }
         });
@@ -156,7 +149,8 @@ public class TaskViewPagerActivity extends AppCompatActivity {
     }
 
     private void showNewTaskDialog(){
-        NewTaskDialog.newInstance(mViewPager2.getCurrentItem()).show(getSupportFragmentManager(),TAG_NEW_TASK);
+
+        NewTaskDialog.newInstance().show(getSupportFragmentManager(),TAG_NEW_TASK);
     }
 
     @Override
@@ -194,36 +188,34 @@ public class TaskViewPagerActivity extends AppCompatActivity {
         }
     }
 
-    public void setUpdate(){
-        int position = mViewPager2.getCurrentItem();
-
-        setViewPager();
-        mViewPager2.setCurrentItem(position, false);
+    public void updateRecyclerView(){
 
         for (int i = 0; i <getSupportFragmentManager().getFragments().size() ; i++) {
 
             if (getSupportFragmentManager().getFragments().get(i) instanceof TaskListFragment){
-                ((TaskListFragment) getSupportFragmentManager().getFragments().get(i)).setAdapter(getCurrentTabState());
-
-                return;
+                ((TaskListFragment) getSupportFragmentManager().getFragments().get(i)).setAdapter();
+                break;
             }
         }
+
+
         hideImage();
+
     }
 
-    private TaskState getCurrentTabState(){
+    private void getCurrentTab(){
 
         if (mViewPager2.getCurrentItem() == 0)
-            return TaskState.TODO;
+            mTaskRepository.setCurrentTab(TaskState.TODO);
         else if (mViewPager2.getCurrentItem() == 1)
-            return TaskState.DOING;
+            mTaskRepository.setCurrentTab(TaskState.DOING);
         else
-            return TaskState.DONE;
+            mTaskRepository.setCurrentTab(TaskState.DONE);
     }
 
-    private void hideImage(){
+    public void hideImage(){
 
-        if (getTaskList(getCurrentTabState()).size() == 0) {
+        if (getTaskList(mTaskRepository.getCurrentTab()).size() == 0) {
             mImageViewTaskEmpty.setVisibility(View.VISIBLE);
             mImageViewTaskEmpty.bringToFront();
         }

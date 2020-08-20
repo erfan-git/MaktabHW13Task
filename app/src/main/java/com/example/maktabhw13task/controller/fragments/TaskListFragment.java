@@ -1,40 +1,37 @@
 package com.example.maktabhw13task.controller.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.maktabhw13task.R;
 import com.example.maktabhw13task.adapter.TaskRecyclerViewAdapter;
-import com.example.maktabhw13task.enums.TaskState;
+import com.example.maktabhw13task.controller.activity.TaskViewPagerActivity;
 import com.example.maktabhw13task.model.TaskModel;
 import com.example.maktabhw13task.repository.TaskRepository;
 import com.example.maktabhw13task.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class TaskListFragment extends Fragment {
+public class TaskListFragment extends Fragment implements TaskRecyclerViewAdapter.OnDeleteTaskListener {
 
 
     public static final String TAG = "tag";
-    public static final String BUNDLE_TASK_STATE = "BundleTaskList";
     private RecyclerView mRecyclerView;
     private TaskRepository mTaskRepository;
     private UserRepository mUserRepository;
     private TaskRecyclerViewAdapter mAdapter;
-    private TaskState mTaskState;
 
-    public static TaskListFragment newInstance(TaskState state) {
+    public static TaskListFragment newInstance() {
 
         Bundle args = new Bundle();
-        args.putSerializable(BUNDLE_TASK_STATE, state);
         TaskListFragment fragment = new TaskListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -44,7 +41,7 @@ public class TaskListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mTaskState = (TaskState) getArguments().getSerializable(BUNDLE_TASK_STATE);
+
         mTaskRepository = TaskRepository.getInstance();
         mUserRepository = UserRepository.getInstance();
     }
@@ -55,7 +52,7 @@ public class TaskListFragment extends Fragment {
 
         findViews(view);
 
-        setAdapter(mTaskState);
+        setAdapter();
 
         return view;
     }
@@ -67,29 +64,57 @@ public class TaskListFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    public void setAdapter(TaskState taskState) {
+    public void setAdapter() {
 
-       /* if (mAdapter == null) {
-            mAdapter = new TaskRecyclerViewAdapter(getTaskList(taskState));
-
-        } else {
+        if (mAdapter == null)
+            mAdapter = new TaskRecyclerViewAdapter(getActivity(), getTaskList(), this);
+        else
+        {
+            mAdapter.setTaskList(getTaskList());
             mAdapter.notifyDataSetChanged();
+        }
 
-        }*/
-        mAdapter = new TaskRecyclerViewAdapter(getTaskList(taskState), getActivity(), mUserRepository.getCurrentUserIndex());
+
         mRecyclerView.setAdapter(mAdapter);
+
+
     }
 
-    private List<TaskModel> getTaskList(TaskState taskState) {
-        List<TaskModel> list = new ArrayList<>();
+    @Override
+    public void onResume() {
+        super.onResume();
+        setAdapter();
+    }
 
+    private List<TaskModel> getTaskList() {
+
+        List<TaskModel> list = new ArrayList<>();
         for (int i = 0; i < mTaskRepository.getTaskList().size(); i++) {
-            if (mUserRepository.getCurrentUserIndex() != 0 && mTaskRepository.getTaskList().get(i).getTaskState().equals(taskState) && mTaskRepository.getTaskList().get(i).getUserId().equals(mUserRepository.getUserList().get(mUserRepository.getCurrentUserIndex()).getId()))
+            if (mUserRepository.getCurrentUserIndex() != 0 && mTaskRepository.getTaskList().get(i).getTaskState().equals(mTaskRepository.getCurrentTab()) && mTaskRepository.getTaskList().get(i).getUserId().equals(mUserRepository.getUserList().get(mUserRepository.getCurrentUserIndex()).getId()))
                 list.add(mTaskRepository.getTaskList().get(i));
-            else if (mUserRepository.getCurrentUserIndex() == 0 && mTaskRepository.getTaskList().get(i).getTaskState().equals(taskState))
+            else if (mUserRepository.getCurrentUserIndex() == 0 && mTaskRepository.getTaskList().get(i).getTaskState().equals(mTaskRepository.getCurrentTab()))
                 list.add(mTaskRepository.getTaskList().get(i));
         }
         return list;
+    }
+
+    @Override
+    public void sendTaskInfo(UUID taskId, int taskPosition) {
+
+        deleteTask(taskId);
+        mAdapter.setTaskList(getTaskList());
+        mAdapter.notifyItemRemoved(taskPosition);
+        ((TaskViewPagerActivity)getActivity()).hideImage();
+    }
+
+    private void deleteTask(UUID taskId){
+
+        for (int i = 0; i < mTaskRepository.getTaskList().size(); i++) {
+            if (mTaskRepository.getTaskList().get(i).getTaskId().equals(taskId)) {
+                mTaskRepository.deleteTask(taskId);
+                break;
+            }
+        }
     }
 
 }

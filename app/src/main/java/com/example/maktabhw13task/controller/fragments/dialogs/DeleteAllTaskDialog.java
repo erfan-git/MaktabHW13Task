@@ -40,7 +40,7 @@ public class DeleteAllTaskDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         TaskRepository taskRepository = TaskRepository.getInstance();
                         taskRepository.deleteAllTask();
-                        ((TaskViewPagerActivity)getActivity()).setUpdate();
+                        ((TaskViewPagerActivity)getActivity()).updateRecyclerView();
                         
                     }
                 })

@@ -3,8 +3,10 @@ package com.example.maktabhw13task.controller.fragments.dialogs;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +25,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,12 +37,11 @@ public class NewTaskDialog extends DialogFragment {
     public static final int REQUEST_CODE_DATE_PICKER = 1;
     public static final int REQUEST_CODE_TIME_PICKER = 2;
     public static final String TAG_TIME_PICKER = "TagTimePicker";
-    public static final String ARG_TAB_POSITION = "ArgTabPosition";
+    public static final String TAG = "tag";
 
-    public static NewTaskDialog newInstance(int position) {
+    public static NewTaskDialog newInstance() {
 
         Bundle args = new Bundle();
-        args.putInt(ARG_TAB_POSITION, position);
         NewTaskDialog fragment = new NewTaskDialog();
         fragment.setArguments(args);
         return fragment;
@@ -52,17 +54,18 @@ public class NewTaskDialog extends DialogFragment {
     private TextInputEditText mInputEditTextTitle, mInputEditTextDescription;
 
     private Calendar mCalendar;
-    private TaskState mTaskState = TaskState.TODO;
+    private TaskState mTaskState;
     private GregorianCalendar mUnSavedDate;
     private GregorianCalendar mUnSavedTime;
-    private int mCurrentTab;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mUserRepository = UserRepository.getInstance();
         mTaskRepository = TaskRepository.getInstance();
-        mCurrentTab = getArguments().getInt(ARG_TAB_POSITION);
+
+        mTaskState = mTaskRepository.getCurrentTab();
     }
 
     @NonNull
@@ -106,12 +109,12 @@ public class NewTaskDialog extends DialogFragment {
     }
 
     private void setSpinner() {
-        {
 
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.spinner_item, android.R.layout.simple_spinner_dropdown_item);
 
             mSpinnerState.setAdapter(adapter);
-            mSpinnerState.setSelection(mCurrentTab);
+            mSpinnerState.setSelection(getSpinnerItem());
+        
 
             mSpinnerState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -137,9 +140,16 @@ public class NewTaskDialog extends DialogFragment {
                 }
             });
 
+    }
 
-        }
+    private int getSpinnerItem(){
 
+        if (mTaskRepository.getCurrentTab().equals(TaskState.TODO))
+            return 0;
+        else if (mTaskRepository.getCurrentTab().equals(TaskState.DOING))
+            return 1;
+        else
+            return 2;
     }
 
     private void setListeners(){
@@ -179,8 +189,10 @@ public class NewTaskDialog extends DialogFragment {
                 mCalendar = Calendar.getInstance();
                 mCalendar.set(mUnSavedDate.get(Calendar.YEAR), mUnSavedDate.get(Calendar.MONTH),mUnSavedDate.get(Calendar.DAY_OF_MONTH),mUnSavedTime.get(Calendar.HOUR_OF_DAY),mUnSavedTime.get(Calendar.MINUTE));
                 mTaskRepository.addTask(new TaskModel(mInputEditTextTitle.getText().toString(), mInputEditTextDescription.getText().toString(), mTaskState, mCalendar.getTime() ));
+
+                ((TaskViewPagerActivity) Objects.requireNonNull(getActivity())).updateRecyclerView();
                 dismiss();
-                ((TaskViewPagerActivity)getActivity()).setUpdate();
+
 
             }
         });
@@ -202,5 +214,6 @@ public class NewTaskDialog extends DialogFragment {
             mButtonTimerPicker.setText(android.text.format.DateFormat.format("HH:mm", mUnSavedTime.getTime()));
         }
     }
+
 
 }

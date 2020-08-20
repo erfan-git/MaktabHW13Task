@@ -69,7 +69,7 @@ public class UserMangerDialog extends DialogFragment implements UserRecyclerView
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ((TaskViewPagerActivity) getActivity()).setUpdate();
+                            ((TaskViewPagerActivity) getActivity()).updateRecyclerView();
                             dismiss();
                         }
                     })
@@ -112,7 +112,7 @@ public class UserMangerDialog extends DialogFragment implements UserRecyclerView
     private void deleteTask(int position) {
 
         for (int i = 0; i < mTaskRepository.getTaskList().size(); i++) {
-            if (mTaskRepository.getTaskList().get(i).getUserId().equals(mUserRepository.getUserList().get(position).getId())) {
+            if (mTaskRepository.getTaskList().get(i).getUserId().equals(mUserRepository.getUserList().get(position + 1).getId())) {
                 mTaskRepository.getTaskList().remove(i--);
             }
         }

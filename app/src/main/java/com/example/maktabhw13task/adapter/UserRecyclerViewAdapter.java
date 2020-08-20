@@ -38,7 +38,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new UserViewHolder(LayoutInflater.from(mContext).inflate(R.layout.user_item_row, parent, false), mOnNoUserListeners);
+        return new UserViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_row, parent, false), mOnNoUserListeners);
     }
 
     @Override
@@ -77,11 +77,12 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         public UserViewHolder(@NonNull View itemView, OnNoUserListeners onNoUserListeners) {
             super(itemView);
 
-            mTitle = itemView.findViewById(R.id.textViewUserItemTitle);
-            mSubtitle = itemView.findViewById(R.id.textViewUserItemSubtitle);
-            mFirstLetter = itemView.findViewById(R.id.textViewUserItemFirstLetter);
-            mTaskNumber = itemView.findViewById(R.id.textViewTaskNumber);
-            mDelete = itemView.findViewById(R.id.imageViewDeleteUser);
+            mTitle = itemView.findViewById(R.id.textViewItemRowTitle);
+            mSubtitle = itemView.findViewById(R.id.textViewItemRowSubtitle);
+            mFirstLetter = itemView.findViewById(R.id.textViewItemRowFirstLetter);
+            mTaskNumber = itemView.findViewById(R.id.textViewItemRowDescription);
+            mDelete = itemView.findViewById(R.id.imageViewDeleteItemRow);
+            mDelete.setVisibility(View.VISIBLE);
             this.onNoUserListeners = onNoUserListeners;
             mDelete.setOnClickListener(this);
         }
