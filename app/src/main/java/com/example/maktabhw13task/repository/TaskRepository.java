@@ -77,10 +77,7 @@ public class TaskRepository {
     }
 
     public void deleteAllTask(){
-        UserRepository userRepository = UserRepository.getInstance();
-        for (int i = 0; i < mTaskList.size(); i++) {
-            if (mTaskList.get(i).getUserId().equals(userRepository.getUserList().get(userRepository.getCurrentUserIndex()).getId()))
+        for (int i = 0; i < mTaskList.size(); i++)
                 mTaskList.remove(i--);
-        }
     }
 }

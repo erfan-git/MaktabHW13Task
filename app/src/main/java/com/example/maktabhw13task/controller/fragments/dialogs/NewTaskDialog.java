@@ -190,7 +190,7 @@ public class NewTaskDialog extends DialogFragment {
                 mCalendar.set(mUnSavedDate.get(Calendar.YEAR), mUnSavedDate.get(Calendar.MONTH),mUnSavedDate.get(Calendar.DAY_OF_MONTH),mUnSavedTime.get(Calendar.HOUR_OF_DAY),mUnSavedTime.get(Calendar.MINUTE));
                 mTaskRepository.addTask(new TaskModel(mInputEditTextTitle.getText().toString(), mInputEditTextDescription.getText().toString(), mTaskState, mCalendar.getTime() ));
 
-                ((TaskViewPagerActivity) Objects.requireNonNull(getActivity())).updateRecyclerView();
+                ((TaskViewPagerActivity)getActivity()).updateRecyclerView();
                 dismiss();
 
 

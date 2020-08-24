@@ -1,6 +1,7 @@
 package com.example.maktabhw13task.controller.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,18 +44,18 @@ public class TaskListFragment extends Fragment implements TaskRecyclerViewAdapte
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         mTaskRepository = TaskRepository.getInstance();
         mUserRepository = UserRepository.getInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_task_list, container, false);
+
+        View view =  inflater.inflate(R.layout.fragment_task_list, container, false);
 
         findViews(view);
-
         setAdapter();
+        Log.d(TAG, "onViewCreated: ");
 
         return view;
     }
@@ -62,31 +65,29 @@ public class TaskListFragment extends Fragment implements TaskRecyclerViewAdapte
 
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        Log.d(TAG, "findViews: ");
     }
 
     public void setAdapter() {
 
+        Log.d(TAG, "setAdapter: ");
         if (mAdapter == null)
             mAdapter = new TaskRecyclerViewAdapter(getActivity(), getTaskList(), this);
+
         else
         {
             mAdapter.setTaskList(getTaskList());
             mAdapter.notifyDataSetChanged();
         }
 
-
-        mRecyclerView.setAdapter(mAdapter);
-
-
+            mRecyclerView.setAdapter(mAdapter);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setAdapter();
-    }
-
+    
     private List<TaskModel> getTaskList() {
+
+        mTaskRepository = TaskRepository.getInstance();
+        mUserRepository = UserRepository.getInstance();
 
         List<TaskModel> list = new ArrayList<>();
         for (int i = 0; i < mTaskRepository.getTaskList().size(); i++) {
