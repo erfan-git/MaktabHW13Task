@@ -38,10 +38,12 @@ public class NewTaskDialog extends DialogFragment {
     public static final int REQUEST_CODE_TIME_PICKER = 2;
     public static final String TAG_TIME_PICKER = "TagTimePicker";
     public static final String TAG = "tag";
+    public static final String BUNDLE_TASK_STATE_TASK_DIALOG = "BundleTaskStateTaskDialog";
 
-    public static NewTaskDialog newInstance() {
+    public static NewTaskDialog newInstance(TaskState taskState) {
 
         Bundle args = new Bundle();
+        args.putSerializable(BUNDLE_TASK_STATE_TASK_DIALOG, taskState);
         NewTaskDialog fragment = new NewTaskDialog();
         fragment.setArguments(args);
         return fragment;
@@ -65,7 +67,7 @@ public class NewTaskDialog extends DialogFragment {
         mUserRepository = UserRepository.getInstance();
         mTaskRepository = TaskRepository.getInstance();
 
-        mTaskState = mTaskRepository.getCurrentTab();
+        mTaskState = (TaskState) getArguments().getSerializable(BUNDLE_TASK_STATE_TASK_DIALOG);
     }
 
     @NonNull
@@ -144,9 +146,9 @@ public class NewTaskDialog extends DialogFragment {
 
     private int getSpinnerItem(){
 
-        if (mTaskRepository.getCurrentTab().equals(TaskState.TODO))
+        if (mTaskState.equals(TaskState.TODO))
             return 0;
-        else if (mTaskRepository.getCurrentTab().equals(TaskState.DOING))
+        else if (mTaskState.equals(TaskState.DOING))
             return 1;
         else
             return 2;
@@ -189,8 +191,7 @@ public class NewTaskDialog extends DialogFragment {
                 mCalendar = Calendar.getInstance();
                 mCalendar.set(mUnSavedDate.get(Calendar.YEAR), mUnSavedDate.get(Calendar.MONTH),mUnSavedDate.get(Calendar.DAY_OF_MONTH),mUnSavedTime.get(Calendar.HOUR_OF_DAY),mUnSavedTime.get(Calendar.MINUTE));
                 mTaskRepository.addTask(new TaskModel(mInputEditTextTitle.getText().toString(), mInputEditTextDescription.getText().toString(), mTaskState, mCalendar.getTime() ));
-
-                ((TaskViewPagerActivity)getActivity()).updateRecyclerView();
+                getTargetFragment().onActivityResult(getTargetRequestCode(),Activity.RESULT_OK, new Intent());
                 dismiss();
 
 
@@ -214,6 +215,7 @@ public class NewTaskDialog extends DialogFragment {
             mButtonTimerPicker.setText(android.text.format.DateFormat.format("HH:mm", mUnSavedTime.getTime()));
         }
     }
+
 
 
 }

@@ -186,8 +186,8 @@ public class EditTaskDialog extends DialogFragment {
                 mTaskRepository.getTask(mTaskRepository.getPosition(mTask.getTaskId())).setDate(mCalendar.getTime());
                 mTaskRepository.getTask(mTaskRepository.getPosition(mTask.getTaskId())).setTaskState(mTaskState);
 
-
-                ((TaskViewPagerActivity)getActivity()).updateRecyclerView();
+                // TODO: 25/08/2020 must be handle
+                //((TaskViewPagerActivity)getActivity()).updateRecyclerView();
                 dismiss();
 
             }

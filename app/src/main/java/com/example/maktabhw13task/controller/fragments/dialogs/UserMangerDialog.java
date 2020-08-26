@@ -69,7 +69,8 @@ public class UserMangerDialog extends DialogFragment implements UserRecyclerView
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ((TaskViewPagerActivity) getActivity()).updateRecyclerView();
+                            // TODO: 25/08/2020 must be handle
+                            //((TaskViewPagerActivity) getActivity()).updateRecyclerView();
                             dismiss();
                         }
                     })

@@ -1,17 +1,23 @@
 package com.example.maktabhw13task.controller.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.maktabhw13task.R;
 import com.example.maktabhw13task.adapter.TaskRecyclerViewAdapter;
 import com.example.maktabhw13task.controller.activity.TaskViewPagerActivity;
+import com.example.maktabhw13task.controller.fragments.dialogs.NewTaskDialog;
+import com.example.maktabhw13task.enums.TaskState;
 import com.example.maktabhw13task.model.TaskModel;
 import com.example.maktabhw13task.repository.TaskRepository;
 import com.example.maktabhw13task.repository.UserRepository;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +33,22 @@ public class TaskListFragment extends Fragment implements TaskRecyclerViewAdapte
 
 
     public static final String TAG = "tag";
+    public static final int REQUEST_CODE_FAB_NEW_TASK_DIALOG = 5;
+    public static final String TAG_FAB_SHOW_DIALOG = "TagFabShowDialog";
+    public static final String BUNDLE_TASK_STATE = "BundleTaskState";
     private RecyclerView mRecyclerView;
     private TaskRepository mTaskRepository;
     private UserRepository mUserRepository;
     private TaskRecyclerViewAdapter mAdapter;
+    private FloatingActionButton mFabNewTask;
+    private ImageView mImageViewTaskEmpty;
+    private TaskState mTaskState;
 
-    public static TaskListFragment newInstance() {
+    public static TaskListFragment newInstance(TaskState taskState) {
 
         Bundle args = new Bundle();
+        args.putSerializable(BUNDLE_TASK_STATE, taskState);
+        Log.d(TAG, "newInstance:  " + taskState);
         TaskListFragment fragment = new TaskListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -43,6 +57,10 @@ public class TaskListFragment extends Fragment implements TaskRecyclerViewAdapte
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        mTaskState = (TaskState) getArguments().getSerializable(BUNDLE_TASK_STATE);
+        Log.d(TAG, "onCreate: " + mTaskState);
 
         mTaskRepository = TaskRepository.getInstance();
         mUserRepository = UserRepository.getInstance();
@@ -53,11 +71,33 @@ public class TaskListFragment extends Fragment implements TaskRecyclerViewAdapte
 
         View view =  inflater.inflate(R.layout.fragment_task_list, container, false);
 
+
+        mFabNewTask = ((TaskViewPagerActivity)getActivity()).mFabNewTask;
+        mImageViewTaskEmpty = ((TaskViewPagerActivity)getActivity()).mImageViewTaskEmpty;
+
         findViews(view);
+
         setAdapter();
-        Log.d(TAG, "onViewCreated: ");
+
+        setListener();
+
 
         return view;
+    }
+
+    private void setListener(){
+        mFabNewTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                NewTaskDialog taskDialog = NewTaskDialog.newInstance((TaskState) getArguments().getSerializable(BUNDLE_TASK_STATE));
+                taskDialog.setTargetFragment(TaskListFragment.this, REQUEST_CODE_FAB_NEW_TASK_DIALOG);
+                taskDialog.show(getFragmentManager(), TAG_FAB_SHOW_DIALOG);
+            }
+        });
+
+
     }
 
 
@@ -65,35 +105,41 @@ public class TaskListFragment extends Fragment implements TaskRecyclerViewAdapte
 
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        Log.d(TAG, "findViews: ");
     }
 
     public void setAdapter() {
 
-        Log.d(TAG, "setAdapter: ");
-        if (mAdapter == null)
+        
+        if (mAdapter == null) {
             mAdapter = new TaskRecyclerViewAdapter(getActivity(), getTaskList(), this);
-
+            mRecyclerView.setAdapter(mAdapter);
+        }
         else
         {
             mAdapter.setTaskList(getTaskList());
             mAdapter.notifyDataSetChanged();
         }
 
-            mRecyclerView.setAdapter(mAdapter);
+
     }
 
-    
+    @Override
+    public void onResume() {
+        super.onResume();
+        setAdapter();
+        ((TaskViewPagerActivity)getActivity()).hideImage(mTaskState);
+        Log.d(TAG, "onResume: ");
+    }
+
     private List<TaskModel> getTaskList() {
 
-        mTaskRepository = TaskRepository.getInstance();
-        mUserRepository = UserRepository.getInstance();
+        Log.d(TAG, "getTaskList: TaskState " + mTaskState);
 
         List<TaskModel> list = new ArrayList<>();
         for (int i = 0; i < mTaskRepository.getTaskList().size(); i++) {
-            if (mUserRepository.getCurrentUserIndex() != 0 && mTaskRepository.getTaskList().get(i).getTaskState().equals(mTaskRepository.getCurrentTab()) && mTaskRepository.getTaskList().get(i).getUserId().equals(mUserRepository.getUserList().get(mUserRepository.getCurrentUserIndex()).getId()))
+            if (mUserRepository.getCurrentUserIndex() != 0 && mTaskRepository.getTaskList().get(i).getTaskState().equals(mTaskState) && mTaskRepository.getTaskList().get(i).getUserId().equals(mUserRepository.getUserList().get(mUserRepository.getCurrentUserIndex()).getId()))
                 list.add(mTaskRepository.getTaskList().get(i));
-            else if (mUserRepository.getCurrentUserIndex() == 0 && mTaskRepository.getTaskList().get(i).getTaskState().equals(mTaskRepository.getCurrentTab()))
+            else if (mUserRepository.getCurrentUserIndex() == 0 && mTaskRepository.getTaskList().get(i).getTaskState().equals(mTaskState))
                 list.add(mTaskRepository.getTaskList().get(i));
         }
         return list;
@@ -105,7 +151,7 @@ public class TaskListFragment extends Fragment implements TaskRecyclerViewAdapte
         deleteTask(taskId);
         mAdapter.setTaskList(getTaskList());
         mAdapter.notifyItemRemoved(taskPosition);
-        ((TaskViewPagerActivity)getActivity()).hideImage();
+        ((TaskViewPagerActivity)getActivity()).hideImage(mTaskState);
     }
 
     private void deleteTask(UUID taskId){
@@ -118,4 +164,25 @@ public class TaskListFragment extends Fragment implements TaskRecyclerViewAdapte
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if (resultCode != Activity.RESULT_OK && data == null)
+            return;
+
+        if (requestCode == REQUEST_CODE_FAB_NEW_TASK_DIALOG){
+            setAdapter();
+            Log.d(TAG, "onActivityResult: ");
+            ((TaskViewPagerActivity)getActivity()).hideImage(mTaskState);
+        }
+    }
+
+    /*public void setTaskState(int position){
+        if (position == 0)
+            mTaskState = TaskState.TODO;
+        else if (position == 1)
+            mTaskState = TaskState.DOING;
+        else
+            mTaskState = TaskState.DONE;
+    }*/
 }

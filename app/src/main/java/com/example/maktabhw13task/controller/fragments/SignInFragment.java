@@ -1,9 +1,11 @@
 package com.example.maktabhw13task.controller.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -65,8 +67,11 @@ public class SignInFragment extends Fragment {
         mTextInputLayoutPassword = view.findViewById(R.id.textInputLayoutPassword);
         mLottieAnimationView = view.findViewById(R.id.lottie_done);
 
+
+
         setCheckBoxAdmin();
     }
+
 
     private void setListeners(){
 
@@ -78,6 +83,7 @@ public class SignInFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
                 if (s.toString().length() > 0)
                     mTextInputLayoutUsername.setErrorEnabled(false);
                 else
@@ -99,6 +105,7 @@ public class SignInFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
                 if (s.toString().length() > 0)
                     mTextInputLayoutPassword.setErrorEnabled(false);
                 else
@@ -118,6 +125,22 @@ public class SignInFragment extends Fragment {
 
                 if (!textValidation() || !signInValidation())
                     return;
+
+                mEditTextUsername.setText("");
+                mEditTextPassword.setText("");
+
+                mTextInputLayoutUsername.setHint("Username");
+                mTextInputLayoutPassword.setHint("Password");
+
+
+
+                mEditTextUsername.setFocusable(false);
+                mEditTextPassword.setFocusable(false);
+                mEditTextUsername.setFocusableInTouchMode(true);
+                mEditTextPassword.setFocusableInTouchMode(true);
+
+
+
 
                 startActivity(TaskViewPagerActivity.newIntent(getActivity()));
             }
@@ -146,6 +169,7 @@ public class SignInFragment extends Fragment {
                     }
                     return;
                 }
+
 
                 mUserRepository.addUser(new UserModel(mEditTextUsername.getText().toString(),mEditTextPassword.getText().toString()));
                 setCheckBoxAdmin();

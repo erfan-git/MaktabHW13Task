@@ -2,9 +2,7 @@ package com.example.maktabhw13task.adapter;
 
 
 import com.example.maktabhw13task.controller.fragments.TaskListFragment;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.maktabhw13task.enums.TaskState;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -13,22 +11,21 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class TaskViewPagerAdapter extends FragmentStateAdapter {
 
-    private List<TaskListFragment> mFragmentList;
 
-    public TaskViewPagerAdapter(@NonNull FragmentActivity fragmentActivity, List<TaskListFragment> fragmentList) {
+    public TaskViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
-        mFragmentList = fragmentList;
-    }
-
-    public List<TaskListFragment> getFragmentList(){
-        return mFragmentList;
     }
 
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return mFragmentList.get(position);
+        if (position == 0)
+            return TaskListFragment.newInstance(TaskState.TODO);
+        else if (position == 1)
+            return TaskListFragment.newInstance(TaskState.DOING);
+        else
+            return TaskListFragment.newInstance(TaskState.DONE);
     }
 
     @Override

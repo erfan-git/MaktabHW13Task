@@ -3,6 +3,7 @@ package com.example.maktabhw13task.controller.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.ActivityOptions;
@@ -52,13 +53,13 @@ public class TaskViewPagerActivity extends AppCompatActivity {
 
     public ViewPager2 mViewPager2;
     private Toolbar mToolbar;
-    private FloatingActionButton mFabNewTask;
+    public FloatingActionButton mFabNewTask;
 
     private TabLayout mTabLayout;
     private TaskViewPagerAdapter mTaskViewPagerAdapter;
     private UserRepository mUserRepository;
     private TaskRepository mTaskRepository;
-    private ImageView mImageViewTaskEmpty;
+    public ImageView mImageViewTaskEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,59 +77,57 @@ public class TaskViewPagerActivity extends AppCompatActivity {
 
 
         setListeners();
-        hideImage();
+        hideImage(TaskState.TODO);
 
 
     }
 
     public void setViewPager(){
-        List<TaskListFragment> fragmentList = new ArrayList<>();
-        fragmentList.add(TaskListFragment.newInstance());
-        fragmentList.add(TaskListFragment.newInstance());
-        fragmentList.add(TaskListFragment.newInstance());
 
-        mTaskViewPagerAdapter = new TaskViewPagerAdapter(this, fragmentList);
+
+        mTaskViewPagerAdapter = new TaskViewPagerAdapter(this);
+
+
 
         mViewPager2.setAdapter(mTaskViewPagerAdapter);
 
-        mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+      /*  mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
 
+                for (int i = 0; i < getSupportFragmentManager().getFragments().size(); i++){
 
-                Log.d(TAG, "onPageSelected: ");
-                getCurrentTab();
-                mTaskViewPagerAdapter.getFragmentList().get(position).setAdapter();
-                hideImage();
+                        if (getSupportFragmentManager().getFragments().get(i) instanceof TaskListFragment){
+                            ((TaskListFragment) getSupportFragmentManager().getFragments().get(i)).setTaskState(position);
+                            return;
+                        }
+                }
+
+
+                //getCurrentTab();
+                //mTaskViewPagerAdapter.getFragmentList().get(position).setAdapter();
+                //hideImage();
             }
 
-        });
+        });*/
     }
 
     private void setListeners(){
 
-        mFabNewTask.setOnClickListener(new View.OnClickListener() {
+       /* mFabNewTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showNewTaskDialog();
             }
-        });
+        });*/
 
-        mImageViewTaskEmpty.setOnClickListener(new View.OnClickListener() {
+        /*mImageViewTaskEmpty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showNewTaskDialog();
             }
-        });
-
-
-
-
-
-
-
-
+        });*/
     }
 
 
@@ -178,10 +177,10 @@ public class TaskViewPagerActivity extends AppCompatActivity {
         mToolbar.setSubtitleTextColor(Color.WHITE);
     }
 
-    private void showNewTaskDialog(){
+    /*private void showNewTaskDialog(){
 
         NewTaskDialog.newInstance().show(getSupportFragmentManager(),TAG_NEW_TASK);
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -218,15 +217,7 @@ public class TaskViewPagerActivity extends AppCompatActivity {
         }
     }
 
-    public void updateRecyclerView(){
-
-        mTaskViewPagerAdapter.getFragmentList().get(mViewPager2.getCurrentItem()).setAdapter();
-
-        hideImage();
-
-    }
-
-    private void getCurrentTab(){
+   /* private void getCurrentTab(){
 
         if (mViewPager2.getCurrentItem() == 0)
             mTaskRepository.setCurrentTab(TaskState.TODO);
@@ -234,11 +225,11 @@ public class TaskViewPagerActivity extends AppCompatActivity {
             mTaskRepository.setCurrentTab(TaskState.DOING);
         else
             mTaskRepository.setCurrentTab(TaskState.DONE);
-    }
+    }*/
 
-    public void hideImage(){
+    public void hideImage(TaskState taskState){
 
-        if (getTaskList(mTaskRepository.getCurrentTab()).size() == 0) {
+        if (getTaskList(taskState).size() == 0) {
             mImageViewTaskEmpty.setVisibility(View.VISIBLE);
             mImageViewTaskEmpty.bringToFront();
         }
