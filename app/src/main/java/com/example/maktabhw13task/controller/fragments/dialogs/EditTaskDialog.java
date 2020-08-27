@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.example.maktabhw13task.R;
-import com.example.maktabhw13task.controller.activity.TaskViewPagerActivity;
 import com.example.maktabhw13task.enums.TaskState;
 import com.example.maktabhw13task.model.TaskModel;
 import com.example.maktabhw13task.repository.TaskRepository;
@@ -21,7 +20,6 @@ import com.example.maktabhw13task.repository.UserRepository;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import androidx.annotation.NonNull;
@@ -35,6 +33,18 @@ public class EditTaskDialog extends DialogFragment {
     public static final int REQUEST_CODE_TIME_PICKER = 2;
     public static final String TAG_TIME_PICKER = "TagTimePicker";
     public static final String ARG_TAB_POSITION = "ArgTabPosition";
+    public static final String BUNDLE_UNSAVED_DATE_EDIT_DIALOG = "BundleUnsavedDateEditDialog";
+    public static final String BUNDLE_UNSAVED_TIME_EDIT_DIALOG = "BundleUnsavedTimeEditDialog";
+    UserRepository mUserRepository;
+    TaskRepository mTaskRepository;
+    private Spinner mSpinnerState;
+    private Button mButtonSave, mButtonCancel, mButtonDatePicker, mButtonTimerPicker;
+    private TextInputEditText mInputEditTextTitle, mInputEditTextDescription;
+    private Calendar mCalendar;
+    private TaskState mTaskState = TaskState.TODO;
+    private GregorianCalendar mUnSavedDate;
+    private GregorianCalendar mUnSavedTime;
+    private TaskModel mTask;
 
     public static EditTaskDialog newInstance(TaskModel taskModel) {
 
@@ -44,18 +54,6 @@ public class EditTaskDialog extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
-    UserRepository mUserRepository;
-    TaskRepository mTaskRepository;
-
-    private Spinner mSpinnerState;
-    private Button mButtonSave, mButtonCancel, mButtonDatePicker, mButtonTimerPicker;
-    private TextInputEditText mInputEditTextTitle, mInputEditTextDescription;
-
-    private Calendar mCalendar;
-    private TaskState mTaskState = TaskState.TODO;
-    private GregorianCalendar mUnSavedDate;
-    private GregorianCalendar mUnSavedTime;
-    private TaskModel mTask;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,13 +61,15 @@ public class EditTaskDialog extends DialogFragment {
         mUserRepository = UserRepository.getInstance();
         mTaskRepository = TaskRepository.getInstance();
         mTask = (TaskModel) getArguments().getSerializable(ARG_TAB_POSITION);
+
+        onConfiguration(savedInstanceState);
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_new_task,null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_new_task, null);
 
         findViews(view);
 
@@ -85,7 +85,7 @@ public class EditTaskDialog extends DialogFragment {
                 .create();
     }
 
-    private void findViews(View view){
+    private void findViews(View view) {
         mSpinnerState = view.findViewById(R.id.spinnerDialogState);
         mButtonDatePicker = view.findViewById(R.id.buttonDialogDatePicker);
         mButtonTimerPicker = view.findViewById(R.id.buttonDialogTimePicker);
@@ -95,13 +95,29 @@ public class EditTaskDialog extends DialogFragment {
         mInputEditTextDescription = view.findViewById(R.id.editTextDialogDescription);
     }
 
-    private void initialViews(){
+    private void onConfiguration(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            mUnSavedDate = (GregorianCalendar) savedInstanceState.getSerializable(BUNDLE_UNSAVED_DATE_EDIT_DIALOG);
+            mUnSavedTime = (GregorianCalendar) savedInstanceState.getSerializable(BUNDLE_UNSAVED_TIME_EDIT_DIALOG);
+        }
+    }
 
-        mUnSavedTime = new GregorianCalendar();
-        mUnSavedDate = new GregorianCalendar();
-        mUnSavedDate.setTime(mTask.getDate());
-        mUnSavedTime.setTime(mTask.getDate());
-        mButtonTimerPicker.setText(android.text.format.DateFormat.format("HH:mm",mUnSavedTime.getTime()));
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(BUNDLE_UNSAVED_DATE_EDIT_DIALOG, mUnSavedDate);
+        outState.putSerializable(BUNDLE_UNSAVED_TIME_EDIT_DIALOG, mUnSavedTime);
+    }
+
+    private void initialViews() {
+
+        if (mUnSavedDate == null || mUnSavedTime == null) {
+            mUnSavedTime = new GregorianCalendar();
+            mUnSavedDate = new GregorianCalendar();
+            mUnSavedDate.setTime(mTask.getDate());
+            mUnSavedTime.setTime(mTask.getDate());
+        }
+        mButtonTimerPicker.setText(android.text.format.DateFormat.format("HH:mm", mUnSavedTime.getTime()));
         mButtonDatePicker.setText(android.text.format.DateFormat.format("MM/dd/yyyy", mUnSavedDate.getTime()));
         mInputEditTextTitle.setText(mTask.getTitle());
         mInputEditTextDescription.setText(mTask.getDescription());
@@ -144,7 +160,7 @@ public class EditTaskDialog extends DialogFragment {
 
     }
 
-    private void setListeners(){
+    private void setListeners() {
         mButtonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,21 +189,20 @@ public class EditTaskDialog extends DialogFragment {
         mButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mInputEditTextTitle.getText().toString().length() == 0){
+                if (mInputEditTextTitle.getText().toString().length() == 0) {
                     mInputEditTextTitle.setError("Title Can not be empty.");
                     return;
                 }
 
                 mCalendar = Calendar.getInstance();
-                mCalendar.set(mUnSavedDate.get(Calendar.YEAR), mUnSavedDate.get(Calendar.MONTH),mUnSavedDate.get(Calendar.DAY_OF_MONTH),mUnSavedTime.get(Calendar.HOUR_OF_DAY),mUnSavedTime.get(Calendar.MINUTE));
+                mCalendar.set(mUnSavedDate.get(Calendar.YEAR), mUnSavedDate.get(Calendar.MONTH), mUnSavedDate.get(Calendar.DAY_OF_MONTH), mUnSavedTime.get(Calendar.HOUR_OF_DAY), mUnSavedTime.get(Calendar.MINUTE));
 
-                mTaskRepository.getTask(mTaskRepository.getPosition(mTask.getTaskId())).setTitle(mInputEditTextTitle.getText().toString());
-                mTaskRepository.getTask(mTaskRepository.getPosition(mTask.getTaskId())).setDescription(mInputEditTextDescription.getText().toString());
-                mTaskRepository.getTask(mTaskRepository.getPosition(mTask.getTaskId())).setDate(mCalendar.getTime());
-                mTaskRepository.getTask(mTaskRepository.getPosition(mTask.getTaskId())).setTaskState(mTaskState);
-
-                // TODO: 25/08/2020 must be handle
-                //((TaskViewPagerActivity)getActivity()).updateRecyclerView();
+                mTask.setTitle(mInputEditTextTitle.getText().toString());
+                mTask.setDescription(mInputEditTextDescription.getText().toString());
+                mTask.setDate(mCalendar.getTime());
+                mTask.setTaskState(mTaskState);
+                mTaskRepository.updateTask(mTask);
+                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, new Intent());
                 dismiss();
 
             }
@@ -201,17 +216,17 @@ public class EditTaskDialog extends DialogFragment {
         if (resultCode != Activity.RESULT_OK || data == null)
             return;
 
-        if (requestCode == REQUEST_CODE_DATE_PICKER){
+        if (requestCode == REQUEST_CODE_DATE_PICKER) {
             mUnSavedDate = (GregorianCalendar) data.getSerializableExtra(DatePickerTaskDialog.EXTRA_USER_SELECTED_DATE);
             mButtonDatePicker.setText(android.text.format.DateFormat.format("MM/dd/yyyy", mUnSavedDate.getTime()));
         }
-        if (requestCode == REQUEST_CODE_TIME_PICKER){
+        if (requestCode == REQUEST_CODE_TIME_PICKER) {
             mUnSavedTime = (GregorianCalendar) data.getSerializableExtra(TimePickerTaskDialog.EXTRA_USER_SELECTED_TIME);
             mButtonTimerPicker.setText(android.text.format.DateFormat.format("HH:mm", mUnSavedTime.getTime()));
         }
     }
 
-    private int getTabPosition(){
+    private int getTabPosition() {
         if (mTask.getTaskState().equals(TaskState.TODO))
             return 0;
         if (mTask.getTaskState().equals(TaskState.DOING))

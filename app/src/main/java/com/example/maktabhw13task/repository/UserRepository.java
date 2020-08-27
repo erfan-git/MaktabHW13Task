@@ -25,7 +25,7 @@ public class UserRepository {
     private int mCurrentUserIndex;
 
 
-    // Maybe value by reference ------------------------------------>
+
     public void addUser(UserModel userModel) {
         mUserList.add(userModel);
     }
@@ -39,14 +39,5 @@ public class UserRepository {
     }
 
     public List<UserModel> getUserList(){return mUserList;}
-
-    public void deleteUser(UserModel userModel){
-        for (int i = 0; i < mUserList.size(); i++) {
-            if (mUserList.get(i).getId().equals(userModel.getId())){
-                mUserList.remove(i);
-                return;
-            }
-        }
-    }
 
 }

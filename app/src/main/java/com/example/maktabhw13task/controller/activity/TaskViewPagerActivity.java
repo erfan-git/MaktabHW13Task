@@ -1,31 +1,19 @@
 package com.example.maktabhw13task.controller.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager2.widget.ViewPager2;
-
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.transition.Transition;
-import android.transition.TransitionValues;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 
 import com.example.maktabhw13task.R;
 import com.example.maktabhw13task.adapter.TaskViewPagerAdapter;
-import com.example.maktabhw13task.controller.fragments.dialogs.UserMangerDialog;
-import com.example.maktabhw13task.controller.fragments.dialogs.DeleteAllTaskDialog;
-import com.example.maktabhw13task.controller.fragments.dialogs.NewTaskDialog;
 import com.example.maktabhw13task.controller.fragments.TaskListFragment;
+import com.example.maktabhw13task.controller.fragments.dialogs.DeleteAllTaskDialog;
+import com.example.maktabhw13task.controller.fragments.dialogs.UserMangerDialog;
 import com.example.maktabhw13task.enums.TaskState;
 import com.example.maktabhw13task.model.TaskModel;
 import com.example.maktabhw13task.repository.TaskRepository;
@@ -34,32 +22,32 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class TaskViewPagerActivity extends AppCompatActivity {
 
     public static final String TAG = "tag";
     public static final String TAG_DELETE_DIALOG = "DeleteTaskDialog";
     public static final String TAG_REMOVE_DIALOG = "RemoveUserDialog";
-
-    public static Intent newIntent(Context context){
-
-        return new Intent(context, TaskViewPagerActivity.class);
-    }
-
-    public static final String TAG_NEW_TASK = "TagNewTask";
-
     public ViewPager2 mViewPager2;
-    private Toolbar mToolbar;
     public FloatingActionButton mFabNewTask;
-
+    public ImageView mImageViewTaskEmpty;
+    private Toolbar mToolbar;
     private TabLayout mTabLayout;
     private TaskViewPagerAdapter mTaskViewPagerAdapter;
     private UserRepository mUserRepository;
     private TaskRepository mTaskRepository;
-    public ImageView mImageViewTaskEmpty;
+
+    public static Intent newIntent(Context context) {
+
+        return new Intent(context, TaskViewPagerActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,80 +63,32 @@ public class TaskViewPagerActivity extends AppCompatActivity {
         setViewPager();
         setTabLayout();
 
-
-        setListeners();
         hideImage(TaskState.TODO);
-
-
     }
 
-    public void setViewPager(){
-
-
+    public void setViewPager() {
         mTaskViewPagerAdapter = new TaskViewPagerAdapter(this);
-
-
-
         mViewPager2.setAdapter(mTaskViewPagerAdapter);
-
-      /*  mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-
-                for (int i = 0; i < getSupportFragmentManager().getFragments().size(); i++){
-
-                        if (getSupportFragmentManager().getFragments().get(i) instanceof TaskListFragment){
-                            ((TaskListFragment) getSupportFragmentManager().getFragments().get(i)).setTaskState(position);
-                            return;
-                        }
-                }
-
-
-                //getCurrentTab();
-                //mTaskViewPagerAdapter.getFragmentList().get(position).setAdapter();
-                //hideImage();
-            }
-
-        });*/
     }
 
-    private void setListeners(){
-
-       /* mFabNewTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showNewTaskDialog();
-            }
-        });*/
-
-        /*mImageViewTaskEmpty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showNewTaskDialog();
-            }
-        });*/
-    }
-
-
-    private void setTabLayout(){
+    private void setTabLayout() {
 
         new TabLayoutMediator(mTabLayout, mViewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
 
-                switch (position){
-                    case 1:{
+                switch (position) {
+                    case 1: {
                         tab.setText(R.string.doing);
                         tab.setIcon(R.drawable.ic_doing);
                         break;
                     }
-                    case 2:{
+                    case 2: {
                         tab.setText(R.string.done);
                         tab.setIcon(R.drawable.ic_done);
                         break;
                     }
-                    default:{
+                    default: {
                         tab.setText(R.string.todo);
                         tab.setIcon(R.drawable.ic_todo);
                         break;
@@ -159,7 +99,7 @@ public class TaskViewPagerActivity extends AppCompatActivity {
         }).attach();
     }
 
-    private void findViews(){
+    private void findViews() {
 
         mTabLayout = findViewById(R.id.tabLayout);
         mToolbar = findViewById(R.id.appToolbar);
@@ -169,7 +109,7 @@ public class TaskViewPagerActivity extends AppCompatActivity {
 
     }
 
-    private void setToolbar(){
+    private void setToolbar() {
 
         setSupportActionBar(mToolbar);
         mToolbar.setTitleTextColor(Color.WHITE);
@@ -177,10 +117,16 @@ public class TaskViewPagerActivity extends AppCompatActivity {
         mToolbar.setSubtitleTextColor(Color.WHITE);
     }
 
-    /*private void showNewTaskDialog(){
+    public void updateRecyclerView() {
+        for (int i = 0; i < getSupportFragmentManager().getFragments().size(); i++) {
 
-        NewTaskDialog.newInstance().show(getSupportFragmentManager(),TAG_NEW_TASK);
-    }*/
+            if (getSupportFragmentManager().getFragments().get(i) instanceof TaskListFragment) {
+                ((TaskListFragment) getSupportFragmentManager().getFragments().get(i)).setAdapter();
+                hideImage(getCurrentTab());
+                return;
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -198,7 +144,7 @@ public class TaskViewPagerActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menuExit:
                 finish();
                 return true;
@@ -206,8 +152,8 @@ public class TaskViewPagerActivity extends AppCompatActivity {
                 item.getSubMenu().clearHeader();
                 return true;
             case R.id.menuDelete:
-                 DeleteAllTaskDialog.newInstance().show(getSupportFragmentManager(), TAG_DELETE_DIALOG);
-                 return true;
+                DeleteAllTaskDialog.newInstance().show(getSupportFragmentManager(), TAG_DELETE_DIALOG);
+                return true;
             case R.id.menuManageUser:
                 UserMangerDialog.newInstance().show(getSupportFragmentManager(), TAG_REMOVE_DIALOG);
                 return true;
@@ -217,23 +163,22 @@ public class TaskViewPagerActivity extends AppCompatActivity {
         }
     }
 
-   /* private void getCurrentTab(){
+    private TaskState getCurrentTab() {
 
         if (mViewPager2.getCurrentItem() == 0)
-            mTaskRepository.setCurrentTab(TaskState.TODO);
+            return TaskState.TODO;
         else if (mViewPager2.getCurrentItem() == 1)
-            mTaskRepository.setCurrentTab(TaskState.DOING);
+            return TaskState.DOING;
         else
-            mTaskRepository.setCurrentTab(TaskState.DONE);
-    }*/
+            return TaskState.DONE;
+    }
 
-    public void hideImage(TaskState taskState){
+    public void hideImage(TaskState taskState) {
 
         if (getTaskList(taskState).size() == 0) {
             mImageViewTaskEmpty.setVisibility(View.VISIBLE);
             mImageViewTaskEmpty.bringToFront();
-        }
-        else
+        } else
             mImageViewTaskEmpty.setVisibility(View.GONE);
     }
 

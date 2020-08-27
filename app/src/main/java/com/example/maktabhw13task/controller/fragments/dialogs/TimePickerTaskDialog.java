@@ -7,12 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.DialogFragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TimePicker;
@@ -23,10 +17,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.DialogFragment;
+
 
 public class TimePickerTaskDialog extends DialogFragment {
 
     public static final String ARG_TIME = "ArgTime";
+    public static final String EXTRA_USER_SELECTED_TIME = "com.example.maktabhw13task.controller.fragments.ExtraUserSelectedTime";
+    private TimePicker mTimePicker;
+    private Date mDate;
 
     public static TimePickerTaskDialog newInstance(Date date) {
         Bundle args = new Bundle();
@@ -35,10 +37,6 @@ public class TimePickerTaskDialog extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-    public static final String EXTRA_USER_SELECTED_TIME = "com.example.maktabhw13task.controller.fragments.ExtraUserSelectedTime";
-    private TimePicker mTimePicker;
-    private Date mDate;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +68,7 @@ public class TimePickerTaskDialog extends DialogFragment {
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .setView(view)
-                .setTitle("Time Picker")
+                .setTitle(R.string.time_picker)
                 .create();
     }
 
@@ -82,7 +80,7 @@ public class TimePickerTaskDialog extends DialogFragment {
         mTimePicker.setMinute(gregorianCalendar.get(Calendar.MINUTE));
     }
 
-    private void findViews(View view){
+    private void findViews(View view) {
         mTimePicker = view.findViewById(R.id.timePicker);
     }
 }

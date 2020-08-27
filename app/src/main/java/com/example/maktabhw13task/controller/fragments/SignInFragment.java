@@ -1,11 +1,9 @@
 package com.example.maktabhw13task.controller.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,7 +15,6 @@ import com.example.maktabhw13task.R;
 import com.example.maktabhw13task.controller.activity.TaskViewPagerActivity;
 import com.example.maktabhw13task.model.UserModel;
 import com.example.maktabhw13task.repository.UserRepository;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -48,7 +45,6 @@ public class SignInFragment extends Fragment {
         mUserRepository = UserRepository.getInstance();
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_in, container, false);
@@ -67,13 +63,11 @@ public class SignInFragment extends Fragment {
         mTextInputLayoutPassword = view.findViewById(R.id.textInputLayoutPassword);
         mLottieAnimationView = view.findViewById(R.id.lottie_done);
 
-
-
         setCheckBoxAdmin();
     }
 
 
-    private void setListeners(){
+    private void setListeners() {
 
         mTextInputLayoutUsername.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
@@ -133,13 +127,10 @@ public class SignInFragment extends Fragment {
                 mTextInputLayoutPassword.setHint("Password");
 
 
-
                 mEditTextUsername.setFocusable(false);
                 mEditTextPassword.setFocusable(false);
                 mEditTextUsername.setFocusableInTouchMode(true);
                 mEditTextPassword.setFocusableInTouchMode(true);
-
-
 
 
                 startActivity(TaskViewPagerActivity.newIntent(getActivity()));
@@ -158,12 +149,11 @@ public class SignInFragment extends Fragment {
                     return;
                 }
 
-                if (mUserRepository.getUserList().size() == 0){
-                    if (!mCheckBoxAdmin.isChecked()){
+                if (mUserRepository.getUserList().size() == 0) {
+                    if (!mCheckBoxAdmin.isChecked()) {
                         Toast.makeText(getActivity(), "First of all 'Admin user' should be set.\nPlease check the admin checkbox to sign up. ", Toast.LENGTH_LONG).show();
-                    }else
-                    {
-                        mUserRepository.addUser(new UserModel(mEditTextUsername.getText().toString(),mEditTextPassword.getText().toString()));
+                    } else {
+                        mUserRepository.addUser(new UserModel(mEditTextUsername.getText().toString(), mEditTextPassword.getText().toString()));
                         mLottieAnimationView.playAnimation();
                         setCheckBoxAdmin();
                     }
@@ -171,7 +161,7 @@ public class SignInFragment extends Fragment {
                 }
 
 
-                mUserRepository.addUser(new UserModel(mEditTextUsername.getText().toString(),mEditTextPassword.getText().toString()));
+                mUserRepository.addUser(new UserModel(mEditTextUsername.getText().toString(), mEditTextPassword.getText().toString()));
                 setCheckBoxAdmin();
                 mLottieAnimationView.playAnimation();
             }
@@ -198,7 +188,7 @@ public class SignInFragment extends Fragment {
     private boolean signInValidation() {
 
         for (int i = 0; i < mUserRepository.getUserList().size(); i++) {
-            if (mUserRepository.getUserList().get(i).getUsername().equals(mEditTextUsername.getText().toString())){
+            if (mUserRepository.getUserList().get(i).getUsername().equals(mEditTextUsername.getText().toString())) {
                 for (int j = 0; j < mUserRepository.getUserList().size(); j++) {
                     if (mUserRepository.getUserList().get(j).getPassword().equals(mEditTextPassword.getText().toString())) {
                         mUserRepository.setCurrentUserIndex(i);
@@ -214,16 +204,16 @@ public class SignInFragment extends Fragment {
 
     }
 
-    private boolean usernameValidation(){
+    private boolean usernameValidation() {
         for (int i = 0; i < mUserRepository.getUserList().size(); i++) {
-            if (mUserRepository.getUserList().get(i).getUsername().equals(mEditTextUsername.getText().toString())){
+            if (mUserRepository.getUserList().get(i).getUsername().equals(mEditTextUsername.getText().toString())) {
                 return true;
             }
         }
         return false;
     }
 
-    private void setCheckBoxAdmin(){
+    private void setCheckBoxAdmin() {
         if (mUserRepository.getUserList().size() > 0) {
             mCheckBoxAdmin.setChecked(false);
             mCheckBoxAdmin.setEnabled(false);

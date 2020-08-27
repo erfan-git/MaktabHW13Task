@@ -1,7 +1,5 @@
 package com.example.maktabhw13task.adapter;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.maktabhw13task.R;
-import com.example.maktabhw13task.controller.fragments.dialogs.EditTaskDialog;
-import com.example.maktabhw13task.controller.fragments.dialogs.ViewTaskDialog;
 import com.example.maktabhw13task.model.TaskModel;
-import com.example.maktabhw13task.repository.TaskRepository;
 import com.example.maktabhw13task.repository.UserRepository;
 
 import java.text.DateFormat;
@@ -20,21 +15,18 @@ import java.util.List;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerViewAdapter.TaskViewHolder> {
 
     public static final String TAG = "tag";
-    private List<TaskModel> mTaskList ;
-    private Context mContext;
+    private List<TaskModel> mTaskList;
     private UserRepository mUserRepository = UserRepository.getInstance();
-    private OnDeleteTaskListener mOnDeleteTaskListener;
+    private OnMyTaskListener mOnMyTaskListener;
 
-    public TaskRecyclerViewAdapter(Context context, List<TaskModel> taskList, OnDeleteTaskListener onDeleteTaskListener) {
-        mContext = context;
+    public TaskRecyclerViewAdapter(List<TaskModel> taskList, OnMyTaskListener onMyTaskListener) {
         mTaskList = taskList;
-        mOnDeleteTaskListener = onDeleteTaskListener;
+        mOnMyTaskListener = onMyTaskListener;
     }
 
     public void setTaskList(List<TaskModel> taskList) {
@@ -44,7 +36,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new TaskViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row, parent, false),mOnDeleteTaskListener);
+        return new TaskViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row, parent, false), mOnMyTaskListener);
     }
 
     @Override
@@ -57,21 +49,6 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
             holder.mByUser.setText("(" + mTaskList.get(position).getUser(mTaskList.get(position).getUserId()).getUsername() + ")");
             holder.mDelete.setVisibility(View.VISIBLE);
         }
-
-        onItemClickListeners(holder, position);
-    }
-
-    private void onItemClickListeners(final TaskViewHolder holder, final int position) {
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (mUserRepository.getCurrentUserIndex() == 0) {
-                    EditTaskDialog.newInstance(mTaskList.get(position)).show(((AppCompatActivity) mContext).getSupportFragmentManager(), "TaskEditDialog");
-                } else
-                    ViewTaskDialog.newInstance(mTaskList.get(position)).show(((AppCompatActivity) mContext).getSupportFragmentManager(), "ViewTaskDialog");
-            }
-        });
     }
 
     @Override
@@ -79,32 +56,47 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         return mTaskList.size();
     }
 
+    public interface OnMyTaskListener {
+        void sendTaskInfo(UUID taskId, int taskPosition);
+
+        void startEditTaskDialog(int itemPosition, boolean admin);
+    }
 
     class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        OnMyTaskListener onMyTaskListener;
         private TextView mTitle, mSubtitle, mFirstLetter, mByUser;
         private ImageView mDelete;
-        OnDeleteTaskListener onDeleteTaskListener;
 
-        public TaskViewHolder(@NonNull View itemView, OnDeleteTaskListener onDeleteTaskListener) {
+        public TaskViewHolder(@NonNull View itemView, OnMyTaskListener onMyTaskListener) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.textViewItemRowTitle);
             mSubtitle = itemView.findViewById(R.id.textViewItemRowSubtitle);
             mFirstLetter = itemView.findViewById(R.id.textViewItemRowFirstLetter);
             mByUser = itemView.findViewById(R.id.textViewItemRowDescription);
             mDelete = itemView.findViewById(R.id.imageViewDeleteItemRow);
-            this.onDeleteTaskListener = onDeleteTaskListener;
+            this.onMyTaskListener = onMyTaskListener;
             mDelete.setOnClickListener(this);
+            itemView.setOnClickListener(this);
 
         }
 
         @Override
         public void onClick(View v) {
-            mOnDeleteTaskListener.sendTaskInfo(mTaskList.get(getAdapterPosition()).getTaskId(), getAdapterPosition() );
-        }
-    }
+            if (v == mDelete)
+                mOnMyTaskListener.sendTaskInfo(mTaskList.get(getAdapterPosition()).getTaskId(), getAdapterPosition());
 
-    public interface OnDeleteTaskListener{
-        void sendTaskInfo(UUID taskId, int taskPosition);
+            if (v == itemView) {
+
+                if (mUserRepository.getCurrentUserIndex() == 0)
+                    mOnMyTaskListener.startEditTaskDialog(getAdapterPosition(), true);
+
+                else
+                    mOnMyTaskListener.startEditTaskDialog(getAdapterPosition(), false);
+
+            }
+
+
+        }
     }
 
 }

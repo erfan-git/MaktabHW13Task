@@ -57,9 +57,6 @@ public class SplashFragment extends Fragment {
         },1000);
 
 
-
-
-
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {

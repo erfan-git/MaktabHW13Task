@@ -9,8 +9,6 @@ import android.widget.Button;
 
 import com.example.maktabhw13task.R;
 import com.example.maktabhw13task.model.TaskModel;
-import com.example.maktabhw13task.repository.TaskRepository;
-import com.example.maktabhw13task.repository.UserRepository;
 import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.annotation.NonNull;
@@ -18,6 +16,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class ViewTaskDialog extends DialogFragment {
+
+    public static final String ARG_TASK = "ArgTabPosition";
+    private TaskModel mCurrentTask;
+    private Button mButtonDatePicker, mButtonTimerPicker;
+    private TextInputEditText mInputEditTextTitle, mInputEditTextDescription;
 
     public static ViewTaskDialog newInstance(TaskModel taskModel) {
 
@@ -27,14 +30,6 @@ public class ViewTaskDialog extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
-    public static final String ARG_TASK = "ArgTabPosition";
-
-
-    private TaskModel mCurrentTask;
-
-    private Button  mButtonDatePicker, mButtonTimerPicker;
-    private TextInputEditText mInputEditTextTitle, mInputEditTextDescription;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +42,7 @@ public class ViewTaskDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_view_task,null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_view_task, null);
 
         findViews(view);
 
@@ -61,7 +56,7 @@ public class ViewTaskDialog extends DialogFragment {
                 .create();
     }
 
-    private void findViews(View view){
+    private void findViews(View view) {
 
         mButtonDatePicker = view.findViewById(R.id.buttonDialogDatePicker);
         mButtonTimerPicker = view.findViewById(R.id.buttonDialogTimePicker);
@@ -70,7 +65,7 @@ public class ViewTaskDialog extends DialogFragment {
         mInputEditTextDescription = view.findViewById(R.id.editTextDialogDescription);
     }
 
-    private void initialViews(){
+    private void initialViews() {
 
         mInputEditTextTitle.setText(mCurrentTask.getTitle());
         mInputEditTextDescription.setText(mCurrentTask.getDescription());

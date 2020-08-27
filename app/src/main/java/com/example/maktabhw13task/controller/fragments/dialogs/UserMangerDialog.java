@@ -46,7 +46,6 @@ public class UserMangerDialog extends DialogFragment implements UserRecyclerView
 
     }
 
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -69,8 +68,8 @@ public class UserMangerDialog extends DialogFragment implements UserRecyclerView
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // TODO: 25/08/2020 must be handle
-                            //((TaskViewPagerActivity) getActivity()).updateRecyclerView();
+
+                            ((TaskViewPagerActivity) getActivity()).updateRecyclerView();
                             dismiss();
                         }
                     })
@@ -84,7 +83,6 @@ public class UserMangerDialog extends DialogFragment implements UserRecyclerView
         }
     }
 
-
     private void findAllViews(View view) {
         mRecyclerView = view.findViewById(R.id.userRecyclerView);
         mTextViewNoUser = view.findViewById(R.id.textViewNoUser);
@@ -95,7 +93,6 @@ public class UserMangerDialog extends DialogFragment implements UserRecyclerView
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
     }
-
 
     @Override
     public void noUser(int position) {

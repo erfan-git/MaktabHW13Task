@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import com.example.maktabhw13task.R;
 import com.example.maktabhw13task.controller.activity.TaskViewPagerActivity;
 import com.example.maktabhw13task.repository.TaskRepository;
 
@@ -34,14 +35,14 @@ public class DeleteAllTaskDialog extends DialogFragment {
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle("Delete All")
-                .setMessage("Are you sure delete all task?")
+                .setMessage(R.string.delete_message)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         TaskRepository taskRepository = TaskRepository.getInstance();
                         taskRepository.deleteAllTask();
-                        // TODO: 25/08/2020 Delete all task must be handle
-                        //((TaskViewPagerActivity)getActivity()).updateRecyclerView();
+
+                        ((TaskViewPagerActivity)getActivity()).updateRecyclerView();
                         
                     }
                 })
